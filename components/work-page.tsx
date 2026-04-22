@@ -74,13 +74,13 @@ export function WorkPage({
           className="relative"
           style={{ width: displayW, height: displayH, scale, x, y, opacity: workOpacity }}
         >
-          <Image src={workImage} alt={workAlt} fill sizes="60vmin" className="object-contain" />
+          <Image src={workImage} alt={workAlt} fill sizes="60vmin" className="object-contain select-none pointer-events-none" />
         </motion.div>
 
         <motion.div className="absolute" style={{ opacity: unitOpacity, scale: unitImageScale, x: unitImageX, y: unitImageY }}>
           <ViewTransition name={`unit-${slug}`} share="unit-morph">
             <div className="relative size-32">
-              <Image src={unitImage} alt={unitAlt} fill sizes="128px" priority className="object-contain" />
+              <Image src={unitImage} alt={unitAlt} fill sizes="128px" priority className="object-contain select-none pointer-events-none" />
             </div>
           </ViewTransition>
         </motion.div>

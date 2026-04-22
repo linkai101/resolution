@@ -86,7 +86,7 @@ export function Home() {
           opacity={[0, 1, 1, 0]}
           className="flex flex-col items-center justify-center"
         >
-          <p className="text-2xl text-center">
+          <p className="text-2xl text-center mt-24">
             {"Sometimes, when you stand too close, the image disappears."}
           </p>
           <p className="text-2xl text-center mt-4 invisible">
@@ -101,7 +101,7 @@ export function Home() {
           opacity={[0, 1, 1, 0]}
           className="flex flex-col items-center justify-center"
         >
-          <p className="text-2xl text-center">
+          <p className="text-2xl text-center mt-24">
             {"Sometimes, when you stand too close, the image disappears."}
           </p>
           <p className="text-2xl text-center mt-4">
@@ -124,7 +124,7 @@ export function Home() {
             {works.map(({ slug, unitImage, alt }) => (
               <Link key={slug} href={`/${slug}`} onClick={() => sessionStorage.setItem("homeScrollY", String(window.scrollY))}>
                 <ViewTransition name={`unit-${slug}`} share="unit-morph">
-                  <div className="relative size-32">
+                  <div className="relative size-32 hover:opacity-60 transition-opacity duration-500 cursor-pointer">
                     <Image
                       src={unitImage}
                       alt={alt}
