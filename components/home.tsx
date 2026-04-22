@@ -62,6 +62,8 @@ export function Home() {
           y={[0, -100, -100]}
           className="relative"
         >
+          <hr className="absolute bottom-24 inset-x-0 border-muted"/>
+
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+40px)] p-4 border">
             <div className="w-2xl aspect-3/2 border">
               <h1 className="sr-only">{"resolution"}</h1>
@@ -69,7 +71,13 @@ export function Home() {
             </div>
           </div>
 
-          <hr className="absolute bottom-20 inset-x-0 border-muted"/>
+          <Image
+            src="/assets/rope.png"
+            alt="Rope barrier"
+            width={650}
+            height={650}
+            className="absolute bottom-12 left-1/2 -translate-x-1/2 object-contain"
+          />
         </ScrollSection>
 
         <ScrollSection
