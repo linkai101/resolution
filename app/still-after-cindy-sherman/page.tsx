@@ -11,9 +11,9 @@ export default function StillAfterCindyShermanPage() {
         workSrc: "/assets/still_after_cindy_sherman.jpg",
         workAlt: "Still, after Cindy Sherman",
         workAspect: 2000 / 1484,
-        unitScale: 5.5,
-        unitX: 44,
-        unitY: 98,
+        unitCx: 0.487,
+        unitCy: 0.46,
+        unitFraction: 0.04,
       }}
       details={<>
         <p className="text-lg font-bold">{"Vik Muniz"}</p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import type { ReactNode } from "react";
 import { ViewTransition } from "react";
 import Image from "next/image";
@@ -15,11 +15,14 @@ export interface WorkImageConfig {
   workAlt: string;
   // width/height ratio of the full artwork — used to size the display container
   workAspect: number;
-  // how many times larger the work image starts (zoomed in on the unit)
-  unitScale: number;
-  // pixel offset of the work image at scroll=0, to center on the unit's location
-  unitX?: number;
-  unitY?: number;
+  // Position of the unit center on the work image, as 0–1 fractions of the
+  // work's displayed width/height (0.5 = center). Intrinsic to the artwork,
+  // independent of viewport size.
+  unitCx: number;
+  unitCy: number;
+  // Size of the unit region as a fraction (0–1) of the work's displayed width.
+  // Intrinsic to the artwork.
+  unitFraction: number;
 }
 
 interface WorkPageProps {
@@ -28,11 +31,19 @@ interface WorkPageProps {
   image: WorkImageConfig;
 }
 
+// Size (in px) at which the unit thumbnail is rendered. Must stay in sync with
+// the `size-32` used on the home page so the View Transition morph is seamless.
+const UNIT_PX = 128;
+const FINAL_SCALE = 1.4;
+
 export function WorkPage({ slug, details, image }: WorkPageProps) {
-  const { unitSrc, unitAlt, workSrc, workAlt, workAspect, unitScale, unitX = 0, unitY = 0 } = image;
+  const { unitSrc, unitAlt, workSrc, workAlt, workAspect, unitCx, unitCy, unitFraction } = image;
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
+  const workRef = useRef<HTMLDivElement>(null);
+  const [workSize, setWorkSize] = useState({ width: 0, height: 0 });
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -41,21 +52,42 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
     mass: 0.1,
     damping: 10,
   });
-
   const progress = useSpring(smoothScrollYProgress, { mass: 0.1, damping: 10 });
 
-  const finalScale = 1.4;
-  const scale = useTransform(progress, [0, 1], [unitScale, finalScale]);
+  // Measure the work container's actual rendered pixel size so transforms can
+  // be computed in the same coordinate system as the fixed-size unit image.
+  useLayoutEffect(() => {
+    const el = workRef.current;
+    if (!el) return;
+    const update = () => setWorkSize({ width: el.offsetWidth, height: el.offsetHeight });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Derived from measurements: scale the work so a `unitFraction`-sized region
+  // of it renders at exactly UNIT_PX on screen — matching the unit thumbnail.
+  const safeWidth = workSize.width || 1;
+  const safeHeight = workSize.height || 1;
+  const unitScale = UNIT_PX / (unitFraction * safeWidth);
+  // Pixel translation that brings the unit spot to the viewport center when the
+  // work is zoomed by `unitScale` (with default center transform-origin).
+  const unitX = -unitScale * (unitCx - 0.5) * safeWidth;
+  const unitY = -unitScale * (unitCy - 0.5) * safeHeight;
+
+  const scale = useTransform(progress, [0, 1], [unitScale, FINAL_SCALE]);
   const x = useTransform(progress, [0, 1], [unitX, 0]);
   const y = useTransform(progress, [0, 1], [unitY, 0]);
   const unitOpacity = useTransform(progress, [0, 0.25, 0.5], [1, 1, 0]);
   const workOpacity = useTransform(progress, [0, 0.25], [0.1, 1]);
-  // Unit image transforms derived from work transform math.
-  // At progress p, the unit area's viewport position is: -p * unitX/Y * finalScale / unitScale
-  // and its visual size relative to the work scales by finalScale / unitScale at p=1.
-  const unitImageScale = useTransform(progress, [0, 1], [1, finalScale / unitScale]);
-  const unitImageX = useTransform(progress, [0, 1], [0, -unitX * finalScale / unitScale]);
-  const unitImageY = useTransform(progress, [0, 1], [0, -unitY * finalScale / unitScale]);
+  // Unit image transforms: keep it glued to the unit region of the work across
+  // the entire scroll. At p=1 the work has scale FINAL_SCALE and no offset, so
+  // the unit region sits at -unitX * (FINAL_SCALE / unitScale) from center.
+  const ratio = FINAL_SCALE / unitScale;
+  const unitImageScale = useTransform(progress, [0, 1], [1, ratio]);
+  const unitImageX = useTransform(progress, [0, 1], [0, -unitX * ratio]);
+  const unitImageY = useTransform(progress, [0, 1], [0, -unitY * ratio]);
 
   // Placard fades in at the end of the scroll
   const cardOpacity = useTransform(progress, [0.75, 1], [0, 1]);
@@ -75,6 +107,7 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
 
         {/* Work image + details button */}
         <motion.div
+          ref={workRef}
           className="relative"
           style={{ width: displayW, height: displayH, scale, x, y, opacity: workOpacity }}
         >

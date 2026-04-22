@@ -11,9 +11,9 @@ export default function EveningHonfleurPage() {
         workSrc: "/assets/evening_honfleur.jpg",
         workAlt: "Evening, Honfleur",
         workAspect: 2000 / 1696,
-        unitScale: 50,
-        unitX: -750,
-        unitY: 10,
+        unitCx: 0.525,
+        unitCy: 0.4996,
+        unitFraction: 0.003,
       }}
       details={<>
         <p className="text-lg font-bold">{"Georges-Pierre Seurat"}</p>

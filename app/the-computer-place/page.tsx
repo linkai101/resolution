@@ -11,9 +11,9 @@ export default function TheComputerPlacePage() {
         workSrc: "/assets/the_computer_place.jpg",
         workAlt: "The computer place",
         workAspect: 1,
-        unitScale: 4.5,
-        unitX: 98,
-        unitY: 73,
+        unitCx: 0.4636,
+        unitCy: 0.473,
+        unitFraction: 0.048,
       }}
       details={<>
         <p className="text-lg font-bold">{"Anna Bella Geiger"}</p>

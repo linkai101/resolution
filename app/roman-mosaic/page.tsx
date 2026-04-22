@@ -11,9 +11,9 @@ export default function RomanMosaicPage() {
         workSrc: "/assets/roman_mosaic.jpg",
         workAlt: "Roman mosaic",
         workAspect: 3469 / 3803,
-        unitScale: 6,
-        unitX: -4,
-        unitY: 10,
+        unitCx: 0.5011,
+        unitCy: 0.4974,
+        unitFraction: 0.043,
       }}
       details={<>
         <p className="text-lg font-bold">{"Roman"}</p>

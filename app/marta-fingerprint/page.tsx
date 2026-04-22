@@ -11,9 +11,9 @@ export default function MartaFingerprintPage() {
         workSrc: "/assets/marta_fingerprint.jpg",
         workAlt: "Marta/Fingerprint",
         workAspect: 1518 / 2000,
-        unitScale: 20,
-        unitX: -335,
-        unitY: 20,
+        unitCx: 0.5365,
+        unitCy: 0.4985,
+        unitFraction: 0.013,
       }}
       details={<>
         <p className="text-lg font-bold">{"Chuck Close"}</p>
