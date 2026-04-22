@@ -13,7 +13,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "resolution",
+  title: "resolutions",
   description: "A curation by Linkai Wu",
 };
 
