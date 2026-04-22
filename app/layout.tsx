@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { DesktopOnlyGate } from "@/components/desktop-only-gate";
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
@@ -27,7 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${playfairDisplay.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <DesktopOnlyGate>{children}</DesktopOnlyGate>
+      </body>
     </html>
   );
 }
