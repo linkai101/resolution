@@ -64,8 +64,8 @@ export function Home() {
         >
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%+40px)] p-4 border">
             <div className="w-2xl aspect-3/2 border">
-              <h1 className="sr-only">{"resolutions"}</h1>
-              <PixelCanvas text="resolutions" pixelSize={pixelSize} />
+              <h1 className="sr-only">{"resolution"}</h1>
+              <PixelCanvas text="resolution" pixelSize={pixelSize} />
             </div>
           </div>
 
