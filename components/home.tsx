@@ -68,8 +68,9 @@ export function Home() {
             src="/assets/rope.png"
             alt="Rope barrier"
             width={650}
-            height={650}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 object-contain"
+            height={295}
+            loading="eager"
+            className="absolute bottom-12 left-1/2 -translate-x-1/2"
           />
         </ScrollSection>
 
