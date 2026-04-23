@@ -13,6 +13,7 @@ import {
 } from "motion/react";
 
 import { PixelCanvas } from "@/components/pixel-canvas";
+import { ScrollHint } from "@/components/scroll-hint";
 
 const works: { slug: string; unitImage: string; alt: string }[] = [
   { slug: "roman-mosaic", unitImage: "/assets/roman_mosaic_unit.png", alt: "Roman mosaic unit" },
@@ -130,6 +131,8 @@ export function Home() {
             ))}
           </div>
         </ScrollSection>
+
+        <ScrollHint scrollYProgress={smoothScrollYProgress} />
       </div>
 
       <AnimatePresence>

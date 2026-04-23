@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "motion/react";
 import { Info, X } from "lucide-react";
+import { ScrollHint } from "@/components/scroll-hint";
 
 export interface WorkImageConfig {
   unitSrc: string;
@@ -142,6 +143,8 @@ export function WorkPage({ details, image }: WorkPageProps) {
             </div>
           </motion.div>
         </motion.div>
+
+        <ScrollHint scrollYProgress={progress} />
       </div>
 
       {/* Modal */}
