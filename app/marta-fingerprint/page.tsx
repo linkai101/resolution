@@ -4,7 +4,6 @@ import { Building2 } from "lucide-react";
 export default function MartaFingerprintPage() {
   return (
     <WorkPage
-      slug="marta-fingerprint"
       image={{
         unitSrc: "/assets/marta_fingerprint_unit.png",
         unitAlt: "Marta/Fingerprint unit",

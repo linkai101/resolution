@@ -4,7 +4,6 @@ import { Building2 } from "lucide-react";
 export default function EveningHonfleurPage() {
   return (
     <WorkPage
-      slug="evening-honfleur"
       image={{
         unitSrc: "/assets/evening_honfleur_unit.png",
         unitAlt: "Evening, Honfleur unit",

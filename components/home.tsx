@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
-import { ViewTransition } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   motion,
+  AnimatePresence,
   useScroll,
   useSpring,
   useTransform,
@@ -36,30 +36,23 @@ export function Home() {
   const rawPixel = useTransform(smoothScrollYProgress, [0, 0.75], [0, 1]);
   const pixelSize = useTransform(rawPixel, v => 1 + Math.pow(Math.min(v, 1), 1.5) * 16);
 
-  useLayoutEffect(() => {
-    const saved = sessionStorage.getItem("homeScrollY");
-    if (saved) {
-      sessionStorage.removeItem("homeScrollY");
-      const targetY = parseFloat(saved);
-      window.scrollTo({ top: targetY, behavior: "instant" });
-      const totalScrollable = document.documentElement.scrollHeight - window.innerHeight;
-      if (totalScrollable > 0) {
-        const p = targetY / totalScrollable;
-        scrollYProgress.set(p);
-        smoothScrollYProgress.set(p);
-      }
-    }
-  }, [scrollYProgress, smoothScrollYProgress]);
+  // Always show a loading overlay — hides scroll-position jumps on back-nav and lets images load on fresh visits.
+  const [overlayVisible, setOverlayVisible] = useState(true);
+
+  useEffect(() => {
+    const id = setTimeout(() => setOverlayVisible(false), 700);
+    return () => clearTimeout(id);
+  }, []);
 
   return (
     <main ref={containerRef} className="relative h-[600vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
         <ScrollSection
           scrollYProgress={smoothScrollYProgress}
-          inputRange={[0, 0.65, 0.75]}
-          opacity={[1, 1, 0]}
-          scale={[1, 8, 8]}
-          y={[0, -100, -100]}
+          inputRange={[0, 0.65, 0.75, 1]}
+          opacity={[1, 1, 0, 0]}
+          scale={[1, 8, 8, 8]}
+          y={[0, -100, -100, -100]}
           className="relative"
         >
           <hr className="absolute bottom-24 inset-x-0 border-muted"/>
@@ -82,8 +75,8 @@ export function Home() {
 
         <ScrollSection
           scrollYProgress={smoothScrollYProgress}
-          inputRange={[0.15, 0.25, 0.65, 0.75]}
-          opacity={[0, 1, 1, 0]}
+          inputRange={[0.15, 0.25, 0.65, 0.75, 1]}
+          opacity={[0, 1, 1, 0, 0]}
           className="flex flex-col items-center justify-center"
         >
           <p className="text-2xl text-center mt-24">
@@ -97,8 +90,8 @@ export function Home() {
 
         <ScrollSection
           scrollYProgress={smoothScrollYProgress}
-          inputRange={[0.35, 0.45, 0.65, 0.75]}
-          opacity={[0, 1, 1, 0]}
+          inputRange={[0.35, 0.45, 0.65, 0.75, 1]}
+          opacity={[0, 1, 1, 0, 0]}
           className="flex flex-col items-center justify-center"
         >
           <p className="text-2xl text-center mt-24">
@@ -112,8 +105,8 @@ export function Home() {
 
         <ScrollSection
           scrollYProgress={smoothScrollYProgress}
-          inputRange={[0.85, 0.95]}
-          opacity={[0, 1]}
+          inputRange={[0.85, 0.95, 1]}
+          opacity={[0, 1, 1]}
           className="flex flex-col items-center justify-center"
         >
           <p className="text-xs text-center text-muted font-mono font-medium uppercase tracking-[0.3em]">
@@ -122,23 +115,32 @@ export function Home() {
 
           <div className="flex items-center gap-16 mt-10">
             {works.map(({ slug, unitImage, alt }) => (
-              <Link key={slug} href={`/${slug}`} onClick={() => sessionStorage.setItem("homeScrollY", String(window.scrollY))}>
-                <ViewTransition name={`unit-${slug}`} share="unit-morph">
-                  <div className="relative size-32 hover:opacity-60 transition-opacity duration-500 cursor-pointer">
-                    <Image
-                      src={unitImage}
-                      alt={alt}
-                      fill
-                      sizes="128px"
-                      className="object-contain"
-                    />
-                  </div>
-                </ViewTransition>
+              <Link key={slug} href={`/${slug}`}>
+                <div className="relative size-32 hover:opacity-60 transition-opacity duration-500 cursor-pointer">
+                  <Image
+                    src={unitImage}
+                    alt={alt}
+                    fill
+                    sizes="128px"
+                    className="object-contain"
+                  />
+                </div>
               </Link>
             ))}
           </div>
         </ScrollSection>
       </div>
+
+      <AnimatePresence>
+        {overlayVisible && (
+          <motion.div
+            className="fixed inset-0 z-50 bg-background pointer-events-none"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        )}
+      </AnimatePresence>
     </main>
   );
 }

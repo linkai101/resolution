@@ -2,7 +2,6 @@
 
 import { useState, useRef, useLayoutEffect } from "react";
 import type { ReactNode } from "react";
-import { ViewTransition } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from "motion/react";
@@ -26,17 +25,14 @@ export interface WorkImageConfig {
 }
 
 interface WorkPageProps {
-  slug: string;
   details?: ReactNode;
   image: WorkImageConfig;
 }
 
-// Size (in px) at which the unit thumbnail is rendered. Must stay in sync with
-// the `size-32` used on the home page so the View Transition morph is seamless.
 const UNIT_PX = 128;
 const FINAL_SCALE = 1.4;
 
-export function WorkPage({ slug, details, image }: WorkPageProps) {
+export function WorkPage({ details, image }: WorkPageProps) {
   const { unitSrc, unitAlt, workSrc, workAlt, workAspect, unitCx, unitCy, unitFraction } = image;
   const [modalOpen, setModalOpen] = useState(false);
   const router = useRouter();
@@ -80,7 +76,7 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
   const x = useTransform(progress, [0, 1], [unitX, 0]);
   const y = useTransform(progress, [0, 1], [unitY, 0]);
   const unitOpacity = useTransform(progress, [0, 0.25, 0.5], [1, 1, 0]);
-  const workOpacity = useTransform(progress, [0, 0.25], [0.1, 1]);
+  const workOpacity = useTransform(progress, [0, 0.5], [0, 1]);
   // Unit image transforms: keep it glued to the unit region of the work across
   // the entire scroll. At p=1 the work has scale FINAL_SCALE and no offset, so
   // the unit region sits at -unitX * (FINAL_SCALE / unitScale) from center.
@@ -89,8 +85,8 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
   const unitImageX = useTransform(progress, [0, 1], [0, -unitX * ratio]);
   const unitImageY = useTransform(progress, [0, 1], [0, -unitY * ratio]);
 
-  // Placard fades in at the end of the scroll
-  const cardOpacity = useTransform(progress, [0.75, 1], [0, 1]);
+  // Details button fades in at the end of the scroll
+  const detailsOpacity = useTransform(progress, [0.75, 1], [0, 1]);
 
   const displayW = workAspect >= 1 ? "60vmin" : `${(60 * workAspect).toFixed(2)}vmin`;
   const displayH = workAspect >= 1 ? `${(60 / workAspect).toFixed(2)}vmin` : "60vmin";
@@ -99,7 +95,7 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
     <main ref={containerRef} className="relative h-[400vh]">
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         <button
-          onClick={() => router.push("/?from=works", { scroll: false })}
+          onClick={() => router.back()}
           className="absolute top-6 left-6 z-10 px-3 py-2 border text-xs font-mono font-medium uppercase tracking-[0.3em] hover:opacity-60 transition-opacity cursor-pointer"
         >
           {"← Back"}
@@ -117,7 +113,7 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
           {details &&
             <motion.div
               className="absolute left-full bottom-0 ml-4 select-none"
-              style={{ opacity: cardOpacity }}
+              style={{ opacity: detailsOpacity }}
             >
               <motion.button
                 className="flex items-center justify-center border border-muted cursor-pointer"
@@ -132,12 +128,19 @@ export function WorkPage({ slug, details, image }: WorkPageProps) {
           }
         </motion.div>
 
-        <motion.div className="absolute" style={{ opacity: unitOpacity, scale: unitImageScale, x: unitImageX, y: unitImageY }}>
-          <ViewTransition name={`unit-${slug}`} share="unit-morph">
+        {/* Unit image */}
+        <motion.div
+          className="absolute"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, ease: "easeOut", delay: 0.5 }}
+          style={{ scale: unitImageScale, x: unitImageX, y: unitImageY }}
+        >
+          <motion.div style={{ opacity: unitOpacity }}>
             <div className="relative size-32">
               <Image src={unitSrc} alt={unitAlt} fill sizes="128px" priority className="object-contain select-none pointer-events-none" />
             </div>
-          </ViewTransition>
+          </motion.div>
         </motion.div>
       </div>
 

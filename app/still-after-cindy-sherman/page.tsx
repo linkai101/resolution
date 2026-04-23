@@ -4,7 +4,6 @@ import { Building2 } from "lucide-react";
 export default function StillAfterCindyShermanPage() {
   return (
     <WorkPage
-      slug="still-after-cindy-sherman"
       image={{
         unitSrc: "/assets/still_after_cindy_sherman_unit.png",
         unitAlt: "Still, after Cindy Sherman unit",

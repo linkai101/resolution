@@ -4,7 +4,6 @@ import { Building2 } from "lucide-react";
 export default function TheComputerPlacePage() {
   return (
     <WorkPage
-      slug="the-computer-place"
       image={{
         unitSrc: "/assets/the_computer_place_unit.png",
         unitAlt: "The computer place unit",

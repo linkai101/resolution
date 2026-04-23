@@ -4,7 +4,6 @@ import { Building2 } from "lucide-react";
 export default function RomanMosaicPage() {
   return (
     <WorkPage
-      slug="roman-mosaic"
       image={{
         unitSrc: "/assets/roman_mosaic_unit.png",
         unitAlt: "Roman mosaic unit",
