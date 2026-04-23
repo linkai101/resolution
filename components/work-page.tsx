@@ -96,7 +96,7 @@ export function WorkPage({ details, image }: WorkPageProps) {
     <main ref={containerRef} className="relative h-[400vh]">
       <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push("/#works")}
           className="absolute top-6 left-6 z-10 px-3 py-2 border text-xs font-mono font-medium uppercase tracking-[0.3em] hover:opacity-60 transition-opacity cursor-pointer"
         >
           {"← Back"}

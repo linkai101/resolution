@@ -47,6 +47,7 @@ export function Home() {
 
   return (
     <main ref={containerRef} className="relative h-[600vh]">
+      <div id="works" className="absolute top-[480vh]" />
       <div className="sticky top-0 h-screen overflow-hidden">
         <ScrollSection
           scrollYProgress={smoothScrollYProgress}
